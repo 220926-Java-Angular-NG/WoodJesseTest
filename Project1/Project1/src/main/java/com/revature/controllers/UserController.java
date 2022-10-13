@@ -15,8 +15,9 @@ public class UserController {
             User newUser = context.bodyAsClass(User.class);
             int id = service.createUser(newUser);
             if (id > 0) {
+                newUser.setId(id);
                 Driver.setLogin(newUser);
-                context.json(service.getUserByID(id)).status(200);
+                context.json(newUser).status(200);
             } else {
                 context.result("Unable to create user.").status(500);
             }
