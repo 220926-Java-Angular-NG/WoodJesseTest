@@ -79,6 +79,7 @@ public class UserRepo implements CRUDDaoInterface<User> {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                user.setId(rs.getInt("id"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("pass_word"));
                 user.setFinanceManager(rs.getString("u_role").equals("finance_manager"));
@@ -102,6 +103,7 @@ public class UserRepo implements CRUDDaoInterface<User> {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                user.setId(rs.getInt("id"));
                 user.setUsername(rs.getString("username"));
                 user.setPassword(rs.getString("pass_word"));
                 user.setFinanceManager(rs.getString("u_role").equals("finance_manager"));
@@ -115,7 +117,7 @@ public class UserRepo implements CRUDDaoInterface<User> {
     }
 
     public User update(User user) {
-        String sql = "UPDATE users SET pass_word = ?, u_role = ? WHERE username = ?";
+        String sql = "UPDATE users SET pass_word = ?, u_role = ? WHERE id = ?";
         User updatedUser = new User();
 
         try {
@@ -123,13 +125,14 @@ public class UserRepo implements CRUDDaoInterface<User> {
 
             stmt.setString(1, user.getPassword());
             stmt.setString(2, user.isFinanceManager() ? "finance_manager" : "employee");
-            stmt.setString(3, user.getUsername());
+            stmt.setInt(3, user.getId());
 
             stmt.executeUpdate();
 
             ResultSet rs = stmt.getGeneratedKeys();
 
             if (rs.next()) {
+                updatedUser.setId(rs.getInt("id"));
                 updatedUser.setUsername(rs.getString("username"));
                 updatedUser.setPassword(rs.getString("pass_word"));
                 updatedUser.setFinanceManager(rs.getString("u_role").equals("finance_manager"));
@@ -146,7 +149,7 @@ public class UserRepo implements CRUDDaoInterface<User> {
         try {
             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-            stmt.setInt(2, user.getId());
+            stmt.setInt(1, user.getId());
 
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
