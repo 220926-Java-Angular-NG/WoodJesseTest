@@ -28,7 +28,7 @@ public class TicketRepo implements CRUDDaoInterface<Ticket> {
 
             stmt.setDouble(1, ticket.getAmount());
             stmt.setString(2, ticket.getDescription());
-            stmt.setString(3, ticket.getStatus().DATA);
+            stmt.setString(3, ticket.getStatus().name());
             stmt.setInt(4, Driver.getLogin().getId());
 
             stmt.executeUpdate();
@@ -79,7 +79,7 @@ public class TicketRepo implements CRUDDaoInterface<Ticket> {
             String sql = "SELECT * FROM tickets WHERE status=?";
 
             PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setString(1, status.DATA);
+            stmt.setString(1, status.name());
 
             ResultSet rs = stmt.executeQuery();
 
@@ -133,7 +133,7 @@ public class TicketRepo implements CRUDDaoInterface<Ticket> {
     @Override
     public Ticket getByID(int id) {
         try {
-            String sql = "SELECT * FROM users WHERE id=?";
+            String sql = "SELECT * FROM tickets WHERE id=?";
             Ticket ticket = new Ticket();
 
             PreparedStatement stmt = conn.prepareStatement(sql);
@@ -166,7 +166,7 @@ public class TicketRepo implements CRUDDaoInterface<Ticket> {
 
             stmt.setDouble(1, ticket.getAmount());
             stmt.setString(2, ticket.getDescription());
-            stmt.setString(3, ticket.getStatus().DATA);
+            stmt.setString(3, ticket.getStatus().name());
             stmt.setInt(4, ticket.getCreatorID());
             stmt.setInt(5, ticket.getId());
 

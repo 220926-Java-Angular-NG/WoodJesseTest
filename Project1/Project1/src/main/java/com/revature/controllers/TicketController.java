@@ -18,7 +18,7 @@ public class TicketController {
     public Handler createTicket = context -> {
         if (Driver.getLogin() != null && !Driver.getLogin().isFinanceManager()) {
             Ticket ticket = context.bodyAsClass(Ticket.class);
-            ticket.setStatus(Ticket.Status.Pending);
+            ticket.setStatus(Ticket.Status.pending);
             ticket.setCreatorID(Driver.getLogin().getId());
             int id = service.createTicket(ticket);
             if (id > 0) {
@@ -35,7 +35,7 @@ public class TicketController {
         User session = Driver.getLogin();
         if (session != null) {
             if (session.isFinanceManager()) {
-                context.json(service.getTicketsByStatus(Ticket.Status.Pending)).status(200);
+                context.json(service.getTicketsByStatus(Ticket.Status.pending)).status(200);
             } else {
                 context.json(session).status(200);
             }
@@ -48,13 +48,10 @@ public class TicketController {
         if (session != null && session.isFinanceManager()) {
             Ticket toUpdate = context.bodyAsClass(Ticket.class);
             Ticket currentState = service.getTicketByID(toUpdate.getId());
-            if (
-                    currentState.getStatus() == Ticket.Status.Pending
-                    && currentState.getAmount() == toUpdate.getAmount()
-                    && currentState.getDescription().equals(toUpdate.getDescription())
-                    && currentState.getCreatorID() == toUpdate.getCreatorID()
-                    && (toUpdate.getStatus() == Ticket.Status.Approved || toUpdate.getStatus() == Ticket.Status.Denied)
-            ) {
+            toUpdate.setAmount(currentState.getAmount());
+            toUpdate.setDescription(currentState.getDescription());
+            toUpdate.setCreatorID(currentState.getCreatorID());
+            if (currentState.getStatus() == Ticket.Status.pending && (toUpdate.getStatus() == Ticket.Status.approved || toUpdate.getStatus() == Ticket.Status.denied)) {
                 service.updateTicket(toUpdate);
                 context.json(toUpdate).status(200);
             } else {

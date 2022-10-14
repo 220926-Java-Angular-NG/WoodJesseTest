@@ -9,14 +9,9 @@ public class Ticket {
     }
 
     public enum Status {
-        Pending("pending"),
-        Approved("approved"),
-        Denied("denied");
-
-        Status(String data) {
-            DATA = data;
-        }
-        public final String DATA;
+        pending,
+        approved,
+        denied;
     }
     int id;
     double amount;
@@ -33,7 +28,7 @@ public class Ticket {
     public Ticket(double amount, String description) {
         this.amount = amount;
         this.description = description;
-        status = Status.Pending;
+        status = Status.pending;
     }
 
     public int getId() {
